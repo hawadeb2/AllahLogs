@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allah Logs</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-router-dom@6.26.2/dist/umd/react-router-dom.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.6/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #1a1a1a; color: #e6e6e6; font-family: 'Arial', sans-serif; }
+    .geometric-bg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%232ecc71' stroke-width='0.5'%3E%3Cpath d='M0 0L200 200M200 0L0 200M100 0V200M0 100H200'/%3E%3C/svg%3E"); background-size: 100px; opacity: 0.1; position: absolute; width: 100%; height: 100%; z-index: -1; }
+    .crescent-icon { fill: #2ecc71; transition: transform 0.3s; }
+    .crescent-icon:hover { transform: scale(1.2); }
+    .nav-link { transition: color 0.3s; }
+    .nav-link:hover { color: #ffd700; }
+    .paste-card, .enemy-card, .credit-card { transition: transform 0.3s, box-shadow 0.3s; }
+    .paste-card:hover, .enemy-card:hover, .credit-card:hover { transform: translateY(-5px); box-shadow: 0 4px 20px rgba(46, 204, 113, 0.3); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { BrowserRouter, Routes, Route, Link } = ReactRouterDOM;
+
+    // Custom SVG Icons
+    const CrescentIcon = () => (
+      <svg className="crescent-icon w-6 h-6" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.82 0 3.53-.5 5-1.35-2.99-1.73-5-4.95-5-8.65s2.01-6.92 5-8.65C15.53 2.5 13.82 2 12 2z" />
+      </svg>
+    );
+
+    const TwitterIcon = () => (
+      <svg className="crescent-icon w-6 h-6" viewBox="0 0 24 24">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    );
+
+    // Disclaimer Component
+    const Disclaimer = () => {
+      useEffect(() => {
+        gsap.fromTo(".disclaimer", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, delay: 1 });
+      }, []);
+      return (
+        <footer className="text-center py-4 text-sm text-gray-500 disclaimer">
+          All doxxing is halal, no infidels were harmed in the making of this site.
+        </footer>
+      );
+    };
+
+    // Home Page
+    const Home = () => {
+      useEffect(() => {
+        gsap.fromTo(".hero-text", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, stagger: 0.2 });
+        gsap.to(".particle", { x: () => Math.random() * 100 - 50, y: () => Math.random() * 100 - 50, repeat: -1, yoyo: true, duration: 5 });
+      }, []);
+      return (
+        <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative geometric-bg">
+          <h1 className="hero-text text-5xl md:text-7xl font-bold text-green-500 mb-4">Allah Logs: Cracking Codes, Dropping Names</h1>
+          <p className="hero-text text-xl md:text-2xl max-w-2xl mb-6">
+            we craft cheats for Roblox, Gorilla Tag, CS2, and Discord, and cook exploits hotter than a shawarma spit. Join the chaos!
+          </p>
+          <Link to="/pastebin" className="hero-text bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition">Explore the Madness</Link>
+          <div className="particle absolute w-2 h-2 bg-gold-500 rounded-full" style={{ top: '20%', left: '30%' }}></div>
+          <div className="particle absolute w-2 h-2 bg-gold-500 rounded-full" style={{ top: '50%', left: '70%' }}></div>
+        </div>
+      );
+    };
+
+    // Pastebin Page
+    const Pastebin = () => {
+      const [paste, setPaste] = useState('');
+      const [pastes, setPastes] = useState([]);
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (paste) {
+          const newPaste = { id: Date.now(), content: paste, timestamp: new Date().toLocaleString() };
+          setPastes([newPaste, ...pastes]);
+          setPaste('');
+          gsap.fromTo(`#paste-${newPaste.id}`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 });
+        }
+      };
+      return (
+        <div className="min-h-screen py-10 px-4 relative geometric-bg">
+          <h1 className="text-4xl font-bold text-green-500 text-center mb-8">Pastebin</h1>
+          <div className="max-w-2xl mx-auto">
+            <form onSubmit={handleSubmit} className="mb-8">
+              <textarea
+                className="w-full p-4 bg-gray-800 rounded-lg text-white"
+                rows="5"
+                placeholder="Paste your code, rants, or spicy leaks..."
+                value={paste}
+                onChange={(e) => setPaste(e.target.value)}
+              ></textarea>
+              <button type="submit" className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition mt-4">
+                Submit
+              </button>
+            </form>
+            <div className="space-y-4">
+              {pastes.map((p) => (
+                <div key={p.id} id={`paste-${p.id}`} className="paste-card bg-gray-800 p-4 rounded-lg">
+                  <p className="text-gray-300">{p.content}</p>
+                  <p className="text-sm text-gray-500 mt-2">Posted: {p.timestamp} | <a href={`#paste-${p.id}`} className="text-green-500">Link</a></p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Credits Page
+    const Credits = () => {
+      useEffect(() => {
+        gsap.fromTo(".credit-card", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.2 });
+      }, []);
+      const team = [
+        { nickname: "HackerHassan", role: "Lead Doxxer", bio: "Doxes faster than you can say 'Allahu Akbar'." },
+        { nickname: "ExploitEmir", role: "Exploit Emir", bio: "Crafts cheats so good, even jinns are jealous." },
+        { nickname: "CodeCaliph", role: "Code Caliph", bio: "Rules the codebase with an iron keffiyeh." },
+      ];
+      return (
+        <div className="min-h-screen py-10 px-4 relative geometric-bg">
+          <h1 className="text-4xl font-bold text-green-500 text-center mb-8">Our Glorious Crew</h1>
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+            {team.map((member, i) => (
+              <div key={i} className="credit-card bg-gray-800 p-6 rounded-lg text-center">
+                <svg className="w-16 h-16 mx-auto mb-4 crescent-icon" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.82 0 3.53-.5 5-1.35-2.99-1.73-5-4.95-5-8.65s2.01-6.92 5-8.65C15.53 2.5 13.82 2 12 2z" />
+                </svg>
+                <h2 className="text-xl font-bold text-gold-500">{member.nickname}</h2>
+                <p className="text-green-500">{member.role}</p>
+                <p className="text-gray-300 mt-2">{member.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    // Hall of Autism Page
+    const HallOfAutism = () => {
+      useEffect(() => {
+        gsap.fromTo(".enemy-card", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.2 });
+      }, []);
+      const enemies = [
+        { name: "SnitchyMcSnitch", reason: "Tried to snitch on our Discord", award: "Golden Tantrum Trophy" },
+        { name: "CryBaby420", reason: "Raged over our Roblox cheats", award: "Most Annoying" },
+        { name: "NoobSlayer", reason: "Reported our CS2 exploits", award: "Biggest Crybaby" },
+      ];
+      return (
+        <div className="min-h-screen py-10 px-4 relative geometric-bg">
+          <h1 className="text-4xl font-bold text-green-500 text-center mb-8">Hall of Autism: Our Beloved Enemies</h1>
+          <div className="max-w-4xl mx-auto space-y-6">
+            {enemies.map((enemy, i) => (
+              <div key={i} className="enemy-card bg-gray-800 p-6 rounded-lg flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold text-gold-500">{enemy.name}</h2>
+                  <p className="text-gray-300">Crime: {enemy.reason}</p>
+                </div>
+                <p className="text-green-500 font-bold">{enemy.award}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    // Contact Page
+    const Contact = () => {
+      const [captcha, setCaptcha] = useState('');
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (captcha.toLowerCase() === 'halal') {
+          alert('Message sent! Our exploits are more secure than a burqa.');
+        } else {
+          alert('Wrong CAPTCHA, infidel!');
+        }
+      };
+      return (
+        <div className="min-h-screen py-10 px-4 relative geometric-bg">
+          <h1 className="text-4xl font-bold text-green-500 text-center mb-8">Contact the Chaos Crew</h1>
+          <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg">
+            <form onSubmit={handleSubmit}>
+              <input type="text" className="w-full p-3 mb-4 bg-gray-700 rounded-lg text-white" placeholder="Your Name" required />
+              <input type="email" className="w-full p-3 mb-4 bg-gray-700 rounded-lg text-white" placeholder="Your Email" required />
+              <textarea className="w-full p-3 mb-4 bg-gray-700 rounded-lg text-white" rows="5" placeholder="Your Message" required></textarea>
+              <input
+                type="text"
+                className="w-full p-3 mb-4 bg-gray-700 rounded-lg text-white"
+                placeholder="CAPTCHA: Type 'halal'"
+                value={captcha}
+                onChange={(e) => setCaptcha(e.target.value)}
+                required
+              />
+              <button type="submit" className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition">
+                Send
+              </button>
+            </form>
+            <div className="flex justify-center space-x-4 mt-6">
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer"><TwitterIcon /></a>
+              <a href="https://discord.com" target="_blank" rel="noopener noreferrer"><CrescentIcon /></a>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const App = () => (
+      <BrowserRouter>
+        <nav className="bg-gray-900 p-4 flex justify-center space-x-6 text-lg">
+          <Link to="/" className="nav-link text-green-500 flex items-center"><CrescentIcon /> Home</Link>
+          <Link to="/pastebin" className="nav-link text-green-500 flex items-center"><CrescentIcon /> Pastebin</Link>
+          <Link to="/credits" className="nav-link text-green-500 flex items-center"><CrescentIcon /> Credits</Link>
+          <Link to="/hall-of-autism" className="nav-link text-green-500 flex items-center"><CrescentIcon /> Hall of Autism</Link>
+          <Link to="/contact" className="nav-link text-green-500 flex items-center"><CrescentIcon /> Contact</Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/pastebin" element={<Pastebin />} />
+          <Route path="/credits" element={<Credits />} />
+          <Route path="/hall-of-autism" element={<HallOfAutism />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+        <Disclaimer />
+      </BrowserRouter>
+    );
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
